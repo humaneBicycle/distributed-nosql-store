@@ -18,9 +18,9 @@ expected_data_postgres = {}
 expected_data_mongo = {}   
 expected_data_neo4j = {}   
 
-postgres = postgres_server(host="localhost", port=5432, database="nosql_proj", user="shlok", password="shlok")
+postgres = postgres_server(host="localhost", port=5432, database="nosql_proj", user="postgres", password="admin")
 mongo = mongo_server(host="localhost", port=27017, database="nosql_proj")
-neo4j = neo4j_server(uri="bolt://localhost:7687", user="neo4j", password="neo4jpassword")
+neo4j = neo4j_server(uri="bolt://localhost:7687", user="neo4j", password="nosql_proj")
 postgres.connect()
 mongo.connect()
 neo4j.connect() 

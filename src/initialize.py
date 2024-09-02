@@ -8,8 +8,8 @@ import shutil
 postgres_host = "localhost"
 postgres_port = 5432
 postgres_database = "nosql_proj"
-postgres_user = "shlok"
-postgres_password = "shlok"
+postgres_user = "postgres"
+postgres_password = "admin"
 
 # Database connection details for MongoDB
 mongo_host = "localhost"
@@ -18,7 +18,7 @@ mongo_database = "nosql_proj"
 
 neo4j_uri = "bolt://localhost:7687"
 neo4j_user = "neo4j"
-neo4j_password = "neo4jpassword"
+neo4j_password = "nosql_proj"
 
 def connect_neo4j(uri, user, password):
     try:
@@ -51,7 +51,6 @@ def initialize_log_positions():
             RETURN *
             """
             session.run (cypher_query)
-            #session.run("CALL apoc.schema.assert({}, {})")
 
             session.run("CREATE INDEX FOR (s:Subject) ON (s.value)")
             session.run("CREATE INDEX FOR (r:Predicate) ON (r.value)")

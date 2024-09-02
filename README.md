@@ -41,6 +41,13 @@ The project features a user-friendly command-line interface, allowing users to i
 
 The prototype's functionality was rigorously tested using `basic.py` and `yago_test.py` scripts, demonstrating successful data insertion, updating, and merging operations across varying dataset sizes. While scalability challenges remain, the prototype closely aligns with the project's objectives of enabling efficient interaction with PostgreSQL and MongoDB databases.
 
+## To run
+You need
+### MongoDB Community Edition
+### Neo4j desktop Edition (Install APOC Procedures)
+### PostgreSQL (any between 12-16)
+
+
 ## Future Improvements
 
 Potential areas for future enhancement include:

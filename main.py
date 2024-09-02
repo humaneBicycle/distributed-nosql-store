@@ -6,11 +6,11 @@ from src.neo4j_server import neo4j_server
 def main():
     # Initialize servers
     try:
-        pg_server = postgres_server(host="localhost", port=5432, database="nosql_proj", user="shlok", password="shlok")
+        pg_server = postgres_server(host="localhost", port=5432, database="nosql_proj", user="postgres", password="admin")
         pg_server.connect()
         m_server = mongo_server(host="localhost", port=27017, database="nosql_proj")
         m_server.connect()
-        neo_server = neo4j_server(uri="bolt://localhost:7687", user="neo4j", password="neo4jpassword") 
+        neo_server = neo4j_server(uri="bolt://localhost:7687", user="neo4j", password="nosql_proj") 
         neo_server.connect()
     except Exception as e:
         print("Error initializing servers:", e)

@@ -3,5 +3,4 @@
 #rm -rf *
 #cd ..
 # Start MongoDB
-mongod --dbpath /Users/shlok/nosql_proj/mongo_data
-
+mongod --dbpath 'C:\Users\abhay\nosql_proj\mongo_data'
