@@ -18,12 +18,15 @@ def main():
 
     try:
         while True:
-            command = input("Enter command ('query', 'update', 'merge', 'recover') and server ('postgres', 'mongo', 'neo4j'), followed by arguments:\n").split()
+            command = input("Enter command ('query', 'update', 'merge', 'recover') and server ('postgres', 'mongo', 'neo4j'), followed by arguments in the sequence Action, Server, Arguments:\n").split()
             if (len(command) == 1 and (command[0] == "exit" or command[0] == "quit")):
                 break
 
-            
-            action, server_name, *args = command
+            try:
+                action, server_name, *args = command
+            except ValueError:
+                print("Invalid number of arguments. Please provide an action and server name.")
+                continue
 
             if server_name == "postgres":
                 server = pg_server
@@ -54,6 +57,7 @@ def main():
                     print("Invalid number of arguments for 'update'. Please provide subject, predicate, and new object.")
                     continue
                 server.update(*args)
+                print("updated with subject: "+args[0]+" predicate: "+args[1]+" object: "+args[2])
             elif action == "merge":
                 if len(args) != 1:
                     print("Invalid number of arguments for 'merge'. Please provide the server name.")
@@ -71,6 +75,7 @@ def main():
 
                 server.merge(*args)
                 server2.merge(server_name)
+                print("merged")
             
             elif action == "recover":
                 if len(args) > 0:
@@ -78,9 +83,10 @@ def main():
                     continue
 
                 server.recover()
+                print("recovered database: "+server_name)
 
             else:
-                print("Invalid action. Please choose 'query', 'update', 'merge', or 'recover'.")
+                print("Invalid action. Please choose 'query', 'update', or 'merge'")
 
     finally:
         # Disconnect servers

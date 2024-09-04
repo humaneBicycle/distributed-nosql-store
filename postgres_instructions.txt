@@ -1,5 +1,0 @@
-1. psql -h localhost -U postgres -p 5432 -d nosql_proj
-2. default passwword for postgres is the one set during installation. admin in my case.
-3. CREATE DATABASE "nosql_proj"
-4. CREATE USER abhaysood WITH PASSWORD 'abhaysood';
-

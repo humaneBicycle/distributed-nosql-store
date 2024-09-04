@@ -1,4 +1,11 @@
-1. nuke.sh deletes the log files.
-2. ./mongo_start.sh starts the mongo server.
-3. ./neo4j_start.sh starts the neo4j server.
-4. python3 src/initialize.py deletes the exisiting servers' data, and initializes the log tables.
+1. Start the Databases:
+    a. PostgreSQL using the following command:
+       psql -h localhost -U postgres -p 5432 -d nosql_proj
+       CREATE DATABASE "nosql_proj"
+       CREATE USER [user] WITH PASSWORD '[password]'
+    b. Start the mongodb by simply entering mongod in cmd 
+    c. start neo4j using neo4j desktop or with $NEO4J_HOME/bin/neo4j console
+2. configure passwords for 3 databases in config file
+3. Run src/initialize.py 
+4. Run tests/yago_test.py. Ensure all test are passed before proceding.
+5. Run the main.py to run commands

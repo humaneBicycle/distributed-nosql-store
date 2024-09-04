@@ -118,6 +118,10 @@ def initialize_log_positions():
     mongo_db.log_positions.insert_one({"server_name": "postgres", "log_position": 0}) 
     mongo_db.log_positions.insert_one({"server_name": "neo4j", "log_position": 0}) 
 
+# def insertDummyData(yago_file):
+
+
 if __name__ == "__main__":
     initialize_log_positions()
+    # insertDummyData()
     print("Initialization completed successfully.")

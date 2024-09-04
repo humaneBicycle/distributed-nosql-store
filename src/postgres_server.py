@@ -36,7 +36,7 @@ class postgres_server (server):
                 else:
                     cur.close()
                     self.disconnect()
-                    sys.exit("Error: 'log_positions' table not initialized for PostgreSQL. Exiting...")
+                    sys.exit("Error: 'log_positions' table not initialized for PostgreSQL. Run initialize.py first...")
 
 
                 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -58,13 +58,13 @@ class postgres_server (server):
         if os.path.exists(self.current_log_file):
                 pass
         else:
-            with open(self.current_log_file, "w") as file:
+            with open(self.current_log_file, "w",encoding="utf-8") as file:
                 pass
 
         
     def _write_to_log(self, subject, predicate, new_object, timestamp):
         try:
-            with open(self.current_log_file, "a") as file:
+            with open(self.current_log_file, "a",encoding="utf-8") as file:
                 self.sequence_number += 1
                 log_entry = f"{self.sequence_number}\t{subject}\t{predicate}\t{new_object}\t{timestamp}\n"
                 file.write(log_entry)
@@ -129,12 +129,12 @@ class postgres_server (server):
                 new_log_pos = log_pos % self.shard_value
 
                 if os.path.exists(log_file):
-                    with open(log_file, "r") as f:
+                    with open(log_file, "r",encoding="utf-8") as f:
                         lines = f.readlines()[new_log_pos:]
                 else:
                     break
 
-                with open(log_file, "r") as f:
+                with open(log_file, "r",encoding="utf-8") as f:
                     lines = f.readlines()[new_log_pos:]
 
                 if (len(lines) == 0) :
@@ -191,12 +191,12 @@ class postgres_server (server):
                 new_log_pos = log_pos % self.shard_value
 
                 if os.path.exists(log_file):
-                    with open(log_file, "r") as f:
+                    with open(log_file, "r",encoding="utf-8") as f:
                         lines = f.readlines()[new_log_pos:]
                 else:
                     break
 
-                with open(log_file, "r") as f:
+                with open(log_file, "r",encoding="utf-8") as f:
                     lines = f.readlines()[new_log_pos:]
 
                 if (len(lines) == 0) :
