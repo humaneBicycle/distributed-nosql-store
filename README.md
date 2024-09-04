@@ -15,7 +15,6 @@ The architecture seamlessly integrates PostgreSQL, MongoDB, and Neo4j to efficie
 
 - **Data Storage**: PostgreSQL and MongoDB utilize a "triples" table/collection to store subject-predicate-object triples, while Neo4j employs a graph-based data model with nodes representing entities and relationships representing predicates.
 - **Log-based Merging**: Each server maintains a log file recording updates to its local state. During merging, servers exchange log files and apply updates based on sequence numbers and timestamps, ensuring proper ordering and conflict resolution.
-- **Fault Tolerance**: Sharding log files and implementing a "recover()" method enhance fault tolerance and recovery capabilities.
 
 ## Implementation
 
