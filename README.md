@@ -46,3 +46,5 @@ Specifically, on windows you need:
 1. MongoDB Community Edition
 2. Neo4j desktop Edition (Install APOC Procedures)
 3. PostgreSQL (any between 12-16)
+
+![alt text](image.png)

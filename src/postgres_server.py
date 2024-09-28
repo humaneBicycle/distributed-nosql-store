@@ -180,66 +180,6 @@ class postgres_server (server):
             if cur:
                 cur.close()  # Close cursor
 
-    def recover(self):
-        try:
-            cur = self.conn.cursor()
-            log_pos = 0
-
-            while (True) :
-                log_file_shard = log_pos // self.shard_value
-                log_file = os.path.join(self.log_file + "_" + str(log_file_shard) + self.log_file_exenstion)
-                new_log_pos = log_pos % self.shard_value
-
-                if os.path.exists(log_file):
-                    with open(log_file, "r",encoding="utf-8") as f:
-                        lines = f.readlines()[new_log_pos:]
-                else:
-                    break
-
-                with open(log_file, "r",encoding="utf-8") as f:
-                    lines = f.readlines()[new_log_pos:]
-
-                if (len(lines) == 0) :
-                    break
-
-                for line in lines:
-                    line_num, subject, predicate, obj, timestamp = line.strip().split("\t")
-                    timestamp = int(timestamp)
-
-                    # Check if the record exists in the PostgreSQL database
-                    cur.execute("SELECT * FROM triples WHERE subject = %s AND predicate = %s", (subject, predicate))
-                    record = cur.fetchone()
-
-                    # If record not found, insert it
-                    if record is None:
-                        # Insert the record into the database
-                        cur.execute("INSERT INTO triples (subject, predicate, object, timestamp) VALUES (%s, %s, %s, %s)", (subject, predicate, obj, timestamp))
-                        self.conn.commit()
-
-                        self._write_to_log (subject, predicate, obj, timestamp)
-                    else:
-                        # Check if the existing record has an older timestamp
-                        existing_timestamp = int(record[3])
-                        if existing_timestamp < timestamp:
-                            # Update the record with the newer timestamp
-                            cur.execute("INSERT INTO triples (subject, predicate, object, timestamp) VALUES (%s, %s, %s, %s) ON CONFLICT (subject, predicate) DO UPDATE SET object = %s, timestamp = %s", (subject, predicate, obj, timestamp, obj, timestamp))
-                            self.conn.commit()
-                            self._write_to_log (subject, predicate, obj, timestamp)
-
-                log_pos += len(lines)
-                # Update log position for the current server
-
-        except psycopg2.Error as e:
-            print("Error during recover:", e)
-            self.conn.rollback()  # Rollback transaction in case of error
-        except Exception as e:
-            print("Unexpected error:", e)
-            self.conn.rollback()  # Rollback transaction for any unexpected errors
-        finally:
-            if cur:
-                cur.close()  # Close cursor
-        
-    
     def disconnect(self):
         try:
             self.conn.close()

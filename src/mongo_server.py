@@ -154,48 +154,6 @@ class mongo_server(server):
             traceback.print_exc()
 
 
-    def recover (self) :
-        try :
-            log_pos = 0
-            
-            while (True) : 
-                log_file_shard = log_pos // self.shard_value
-                log_file = os.path.join(self.log_file + "_" + str(log_file_shard) + self.log_file_exenstion)
-                new_log_pos = log_pos % self.shard_value
-
-                if os.path.exists(log_file):
-                    with open(log_file, "r",encoding="utf-8") as f:
-                        lines = f.readlines()[new_log_pos:]
-                else:
-                    break
-
-                with open(log_file, "r",encoding="utf-8") as f:
-                    lines = f.readlines()[new_log_pos:]
-                
-                if (len(lines) == 0) :
-                    break
-
-                for line in lines:
-                    line_num, subject, predicate, obj, timestamp = line.strip().split("\t")
-                    timestamp = int(timestamp)
-
-                    existing_record = self.db.triples.find_one({"subject": subject, "predicate": predicate}, {"timestamp": 1})
-        
-                    if existing_record:
-                        existing_timestamp = existing_record.get("timestamp", 0)
-                        if (existing_timestamp < timestamp) :
-                            self.db.triples.update_one({"subject": subject, "predicate": predicate}, {"$set": {"object": obj, "timestamp": timestamp}}, upsert=True)
-                            self._write_to_log (subject, predicate, obj, timestamp)
-                    else:
-                        self.db.triples.update_one({"subject": subject, "predicate": predicate}, {"$set": {"object": obj, "timestamp": timestamp}}, upsert=True)
-                        self._write_to_log (subject, predicate, obj, timestamp)
-                        
-                log_pos += len(lines)
-
-        except Exception as e:
-            import traceback
-            traceback.print_exc()
-
     
     def disconnect(self):
         try:

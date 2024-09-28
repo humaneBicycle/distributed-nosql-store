@@ -18,7 +18,7 @@ def main():
 
     try:
         while True:
-            command = input("Enter command ('query', 'update', 'merge', 'recover') and server ('postgres', 'mongo', 'neo4j'), followed by arguments in the sequence Action, Server, Arguments:\n").split()
+            command = input("Enter command ('query', 'update', or 'merge') and server ('postgres', 'mongo', 'neo4j'), followed by arguments in the sequence Action, Server, Arguments:\n").split()
             if (len(command) == 1 and (command[0] == "exit" or command[0] == "quit")):
                 break
 
@@ -77,13 +77,6 @@ def main():
                 server2.merge(server_name)
                 print("merged")
             
-            elif action == "recover":
-                if len(args) > 0:
-                    print("Invalid number of arguments for 'recover'.")
-                    continue
-
-                server.recover()
-                print("recovered database: "+server_name)
 
             else:
                 print("Invalid action. Please choose 'query', 'update', or 'merge'")

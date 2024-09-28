@@ -26,10 +26,6 @@ class server (ABC):
         pass
 
     @abstractmethod
-    def recover (self) :
-        pass
-
-    @abstractmethod
     def disconnect(self):
         pass
 

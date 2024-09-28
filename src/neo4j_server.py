@@ -175,53 +175,6 @@ class neo4j_server (server):
                 print("Error merging Neoj4 database:", e)
 
 
-    def recover (self) :
-        try :
-            log_pos = 0
-
-            while (True) :
-                log_file_shard = log_pos // self.shard_value
-                log_file = os.path.join(self.log_file + "_" + str(log_file_shard) + self.log_file_exenstion)
-                new_log_pos = log_pos % self.shard_value
-
-                if os.path.exists(log_file):
-                    with open(log_file, "r",encoding="utf-8") as f:
-                        lines = f.readlines()[new_log_pos:]
-                else:
-                    break
-
-                with open(log_file, "r",encoding="utf-8") as f:
-                    lines = f.readlines()[new_log_pos:]
-
-                if (len(lines) == 0) :
-                    break
-
-                # Process each line from the log file
-                for line in lines:
-                    # Parse line to extract subject, predicate, object, and timestamp
-                    line_num, subject, predicate, obj, timestamp = line.strip().split("\t")
-                    timestamp = int(timestamp)
-
-                    with self.driver.session() as session:
-                        result = session.run("MATCH (s:Subject {value: $subject})-[r:Predicate {value: $predicate}]->(o) RETURN s, r, o", subject=subject, predicate=predicate)
-                        record = result.single()
-
-                        if record is None:
-                            # Insert the record into the database
-                            session.run("MERGE (s:Subject {value: $subject})-[r:Predicate {value: $predicate}]->(o:Object {value: $new_object, timestamp: $timestamp})", subject=subject, predicate=predicate, new_object=obj, timestamp=timestamp)
-                            self._write_to_log (subject, predicate, obj, timestamp)
-                        else:
-                            # Check if the existing record has an older timestamp
-                            existing_timestamp = int(record["o"]["timestamp"])
-                            if existing_timestamp < timestamp:
-                                session.run("MATCH (s:Subject {value: $subject})-[r:Predicate {value: $predicate}]->(o) SET o.value = $new_object, o.timestamp = $timestamp", subject=subject, predicate=predicate, new_object=obj, timestamp=timestamp)
-                                self._write_to_log (subject, predicate, obj, timestamp)
-                
-                log_pos += len (lines)
-
-        except Exception as e:
-                print("Error merging Neoj4 database:", e)
- 
     def disconnect(self):
         try:
             self.driver.close()
